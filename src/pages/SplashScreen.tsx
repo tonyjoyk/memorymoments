@@ -30,7 +30,7 @@ export default function SplashScreen() {
       </p>
 
       <button
-        onClick={() => navigate('/memories')}
+        onClick={() => navigate('/timeline')}
         className="bg-primary text-primary-foreground font-medium text-sm px-8 py-3.5 rounded-full active:scale-95 transition-transform"
       >
         Get started

@@ -21,7 +21,7 @@ export default function EmotionPickerScreen() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <NavBar backTo="/memories" />
+      <NavBar backTo="/timeline" />
 
       <div className="flex-1 px-5 pb-8">
         <div className="mb-8">

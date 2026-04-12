@@ -1,13 +1,13 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Heart, Clock } from 'lucide-react';
+import { Clock, Circle } from 'lucide-react';
 
 export default function BottomNav() {
   const location = useLocation();
   const navigate = useNavigate();
 
   const tabs = [
-    { path: '/memories', label: 'Memories', icon: Heart },
     { path: '/timeline', label: 'Timeline', icon: Clock },
+    { path: '/all', label: 'All Memories', icon: Circle },
   ];
 
   return (

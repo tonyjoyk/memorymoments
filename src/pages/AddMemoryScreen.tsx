@@ -41,7 +41,7 @@ export default function AddMemoryScreen() {
       actions: actions.map(a => ({ ...a, completed: false })),
       isCompleted: false,
     });
-    navigate('/memories');
+    navigate('/timeline');
   };
 
   return (
@@ -150,7 +150,7 @@ export default function AddMemoryScreen() {
       {/* Actions */}
       <div className="sticky bottom-0 p-5 bg-background/90 backdrop-blur-lg border-t border-border flex gap-3">
         <button
-          onClick={() => navigate('/memories')}
+          onClick={() => navigate('/timeline')}
           className="flex-1 py-3.5 rounded-full font-medium text-sm border border-border text-foreground active:scale-[0.98] transition-transform"
         >
           Cancel

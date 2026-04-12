@@ -31,7 +31,7 @@ export default function ReflectionScreen() {
   const handleSave = () => {
     if (selectedEmotions.length === 0) return;
     completeMemory(memory.id, reflection.trim() || undefined, selectedEmotions);
-    navigate('/memories');
+    navigate('/timeline');
   };
 
   const primaryEmotion = EMOTIONS[selectedEmotions[0] || memory.emotions[0]];
