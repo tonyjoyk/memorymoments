@@ -30,7 +30,7 @@ export default function MemoryDetailScreen() {
           background: `linear-gradient(180deg, ${primaryEmotion.bgColor} 0%, hsl(0 0% 5.1%) 100%)`,
         }}
       >
-        <NavBar backTo="/memories" />
+        <NavBar backTo="/timeline" />
         <div className="px-5 pb-8 pt-2">
           <div className="flex flex-wrap gap-1.5 mb-4">
             {memory.emotions.map(e => (
@@ -95,10 +95,10 @@ export default function MemoryDetailScreen() {
       {/* CTAs */}
       <div className="sticky bottom-0 p-5 bg-background/90 backdrop-blur-lg border-t border-border flex gap-3">
         <button
-          onClick={() => navigate('/memories')}
+          onClick={() => navigate('/timeline')}
           className="flex-1 py-3.5 rounded-full font-medium text-sm border border-border text-foreground active:scale-[0.98] transition-transform"
         >
-          Back to memories
+          Back to timeline
         </button>
         {!memory.isCompleted && (
           <button
