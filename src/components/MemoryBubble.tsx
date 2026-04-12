@@ -10,16 +10,16 @@ interface MemoryBubbleProps {
 
 const BUBBLE_COLORS: Record<EmotionType, { gradient: string }> = {
   courage: {
-    gradient: 'radial-gradient(circle at 35% 35%, #FFB89A, #FF7D56 60%, #E86A3A)',
+    gradient: 'radial-gradient(circle at 35% 35%, #FFCAB0, #FF8A65 60%, #F07040)',
   },
   joy: {
-    gradient: 'radial-gradient(circle at 35% 35%, #FFF1A0, #FCE354 60%, #E0C830)',
+    gradient: 'radial-gradient(circle at 35% 35%, #FFF3B0, #FFDC58 60%, #F0C830)',
   },
   growth: {
-    gradient: 'radial-gradient(circle at 35% 35%, #B0EDFF, #5FD8FF 60%, #3ABDE0)',
+    gradient: 'radial-gradient(circle at 35% 35%, #B8E4FF, #64BFFF 60%, #3EA8F0)',
   },
   peace: {
-    gradient: 'radial-gradient(circle at 35% 35%, #B8FFD4, #6AFFA5 60%, #45E085)',
+    gradient: 'radial-gradient(circle at 35% 35%, #B8FFD8, #66E8A0 60%, #40D080)',
   },
 };
 
