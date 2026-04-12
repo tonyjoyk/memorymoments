@@ -14,12 +14,6 @@ export default function AddMemoryScreen() {
 
   const emotions = (location.state?.emotions as EmotionType[]) || [];
 
-  // Redirect if no emotions selected
-  if (emotions.length === 0) {
-    navigate('/emotions', { replace: true });
-    return null;
-  }
-
   const [title, setTitle] = useState('');
   const [quarter, setQuarter] = useState(QUARTERS[4]);
   const [whyMatters, setWhyMatters] = useState('');
@@ -27,6 +21,12 @@ export default function AddMemoryScreen() {
   const [actions, setActions] = useState<{ id: string; text: string }[]>([]);
   const [newAction, setNewAction] = useState('');
   const [titleError, setTitleError] = useState(false);
+
+  // Redirect if no emotions selected
+  if (emotions.length === 0) {
+    navigate('/emotions', { replace: true });
+    return null;
+  }
 
   const addAction = () => {
     if (!newAction.trim()) return;
