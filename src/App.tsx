@@ -1,25 +1,39 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
-import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import Index from "./pages/Index.tsx";
-import NotFound from "./pages/NotFound.tsx";
+import { MemoryProvider } from "@/contexts/MemoryContext";
+import SplashScreen from "./pages/SplashScreen";
+import HomeScreen from "./pages/HomeScreen";
+import EmotionPickerScreen from "./pages/EmotionPickerScreen";
+import AddMemoryScreen from "./pages/AddMemoryScreen";
+import MemoryDetailScreen from "./pages/MemoryDetailScreen";
+import TimelineScreen from "./pages/TimelineScreen";
+import ReflectionScreen from "./pages/ReflectionScreen";
+import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
       <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <MemoryProvider>
+        <BrowserRouter>
+          <div className="max-w-lg mx-auto min-h-screen relative">
+            <Routes>
+              <Route path="/" element={<SplashScreen />} />
+              <Route path="/memories" element={<HomeScreen />} />
+              <Route path="/emotions" element={<EmotionPickerScreen />} />
+              <Route path="/add" element={<AddMemoryScreen />} />
+              <Route path="/memory/:id" element={<MemoryDetailScreen />} />
+              <Route path="/timeline" element={<TimelineScreen />} />
+              <Route path="/reflect/:id" element={<ReflectionScreen />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </div>
+        </BrowserRouter>
+      </MemoryProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
