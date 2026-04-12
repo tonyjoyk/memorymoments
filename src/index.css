@@ -49,17 +49,17 @@
     --joy-dim: 37 70% 39%;
     --joy-bg: 42 100% 7%;
 
-    --growth: 213 60% 57%;
-    --growth-dim: 213 50% 36%;
-    --growth-bg: 213 55% 9%;
+    --growth: 197 100% 69%;
+    --growth-dim: 197 50% 38%;
+    --growth-bg: 197 55% 8%;
 
-    --courage: 24 78% 57%;
-    --courage-dim: 24 70% 36%;
-    --courage-bg: 24 100% 5%;
+    --courage: 16 100% 67%;
+    --courage-dim: 16 70% 36%;
+    --courage-bg: 16 100% 5%;
 
-    --peace: 140 32% 52%;
-    --peace-dim: 140 42% 30%;
-    --peace-bg: 140 40% 5%;
+    --peace: 145 100% 71%;
+    --peace-dim: 145 42% 30%;
+    --peace-bg: 145 40% 5%;
 
     --surface: 0 0% 8.6%;
     --surface-raised: 0 0% 11.8%;
@@ -74,9 +74,19 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-family: 'DM Sans', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    overflow-x: hidden;
   }
   h1, h2, h3, h4 {
     font-family: 'DM Serif Display', serif;
+  }
+  ::selection {
+    background: hsl(var(--primary) / 0.3);
+    color: hsl(var(--foreground));
+  }
+  /* Safe area for bottom nav and sticky footers */
+  .safe-bottom {
+    padding-bottom: max(env(safe-area-inset-bottom, 0px), 8px);
   }
 }
 
@@ -103,10 +113,45 @@
   50% { opacity: 1; }
 }
 
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-up {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes fade-overlay {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 .animate-orb-float {
   animation: orb-float 4s ease-in-out infinite;
 }
 
 .animate-orb-pulse {
   animation: orb-pulse 3s ease-in-out infinite;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease-out both;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-fade-overlay {
+  animation: fade-overlay 0.2s ease-out both;
+}
+
+/* Sonner toast styling */
+[data-sonner-toast] {
+  --normal-bg: hsl(var(--card)) !important;
+  --normal-text: hsl(var(--foreground)) !important;
+  --normal-border: hsl(var(--border)) !important;
+  font-family: 'DM Sans', sans-serif !important;
 }
