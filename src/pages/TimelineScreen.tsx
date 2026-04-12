@@ -1,167 +1,104 @@
-import { useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useMemories } from '@/contexts/MemoryContext';
-import { EMOTIONS, EmotionType, EMOTION_LIST, QUARTERS } from '@/lib/constants';
+import { QUARTERS } from '@/lib/constants';
 import BottomNav from '@/components/BottomNav';
-import EmotionOrb from '@/components/EmotionOrb';
+import MemoryBubble from '@/components/MemoryBubble';
+import { Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-type View = 'timeline' | 'scatter';
+function getCurrentQuarter(): string {
+  const now = new Date();
+  const month = now.getMonth();
+  const year = now.getFullYear();
+  if (month < 3) return `Jan – Mar ${year}`;
+  if (month < 6) return `Apr – Jun ${year}`;
+  if (month < 9) return `Jul – Sep ${year}`;
+  return `Oct – Dec ${year}`;
+}
 
 export default function TimelineScreen() {
   const { memories } = useMemories();
   const navigate = useNavigate();
-  const [view, setView] = useState<View>('timeline');
-  const [filter, setFilter] = useState<EmotionType | 'all'>('all');
+  const currentQ = getCurrentQuarter();
+  const quarterRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
-  const filteredMemories = filter === 'all'
-    ? memories
-    : memories.filter(m => m.emotions.includes(filter));
-
-  // Group by quarter
+  // Group by quarter, only quarters that have memories
   const byQuarter = QUARTERS.reduce<Record<string, typeof memories>>((acc, q) => {
-    const qMemories = filteredMemories.filter(m => m.quarter === q);
-    if (qMemories.length > 0) acc[q] = qMemories;
+    const qMems = memories.filter(m => m.quarter === q);
+    if (qMems.length > 0) acc[q] = qMems;
     return acc;
   }, {});
+
+  // Auto-scroll to current quarter on mount
+  useEffect(() => {
+    const el = quarterRefs.current[currentQ];
+    if (el) {
+      const offset = el.offsetTop - window.innerHeight / 2 + el.offsetHeight / 2;
+      window.scrollTo({ top: Math.max(0, offset), behavior: 'smooth' });
+    }
+  }, [currentQ]);
 
   return (
     <div className="min-h-screen pb-24">
       {/* Header */}
       <div className="px-5 pt-14 pb-4">
         <h1 className="font-display text-[28px] text-foreground mb-1">Timeline</h1>
-        <p className="text-sm text-muted-foreground">Your moments across time</p>
+        <p className="text-sm text-muted-foreground">
+          {memories.length} moment{memories.length !== 1 ? 's' : ''} across time
+        </p>
       </div>
 
-      {/* View toggle */}
-      <div className="px-5 mb-4">
-        <div className="inline-flex rounded-lg bg-surface p-1" style={{ backgroundColor: 'hsl(var(--surface))' }}>
-          <button
-            onClick={() => setView('timeline')}
-            className={`px-4 py-1.5 rounded-md text-xs font-medium transition-colors ${
-              view === 'timeline' ? 'bg-secondary text-foreground' : 'text-muted-foreground'
-            }`}
-          >
-            List
-          </button>
-          <button
-            onClick={() => setView('scatter')}
-            className={`px-4 py-1.5 rounded-md text-xs font-medium transition-colors ${
-              view === 'scatter' ? 'bg-secondary text-foreground' : 'text-muted-foreground'
-            }`}
-          >
-            Bubbles
-          </button>
-        </div>
-      </div>
-
-      {/* Filter chips */}
-      <div className="px-5 mb-6 flex gap-2 overflow-x-auto scrollbar-none">
-        <button
-          onClick={() => setFilter('all')}
-          className={`shrink-0 px-3 py-1.5 rounded-full text-[11px] font-medium transition-colors border ${
-            filter === 'all'
-              ? 'bg-secondary text-foreground border-border'
-              : 'text-muted-foreground border-transparent'
-          }`}
-        >
-          All
-        </button>
-        {EMOTION_LIST.map(e => (
-          <button
-            key={e.id}
-            onClick={() => setFilter(e.id)}
-            className="shrink-0 px-3 py-1.5 rounded-full text-[11px] font-medium transition-colors flex items-center gap-1.5"
-            style={{
-              backgroundColor: filter === e.id ? e.bgColor : 'transparent',
-              color: filter === e.id ? e.color : 'hsl(var(--muted-foreground))',
-              border: filter === e.id ? `1px solid ${e.dimColor}44` : '1px solid transparent',
-            }}
-          >
-            <span className="w-2 h-2 rounded-full" style={{ backgroundColor: e.color }} />
-            {e.label}
-          </button>
-        ))}
-      </div>
-
-      {view === 'timeline' ? (
-        <div className="px-5 space-y-6">
-          {Object.entries(byQuarter).map(([quarter, qMemories]) => (
-            <div key={quarter}>
-              <p className="label-text mb-3">{quarter}</p>
-              <div className="space-y-2">
-                {qMemories.map(m => {
-                  const primary = EMOTIONS[m.emotions[0]];
-                  return (
-                    <button
-                      key={m.id}
-                      onClick={() => navigate(`/memory/${m.id}`)}
-                      className="w-full flex items-center gap-3 text-left py-2 active:opacity-70 transition-opacity"
-                    >
-                      <div
-                        className={`w-3 h-3 rounded-full shrink-0 ${m.isCompleted ? '' : 'border-2'}`}
-                        style={{
-                          backgroundColor: m.isCompleted ? primary.color : 'transparent',
-                          borderColor: primary.color,
-                        }}
-                      />
-                      <span className="text-sm text-foreground flex-1">{m.title}</span>
-                      {m.isCompleted && (
-                        <span className="text-[10px] text-muted-foreground">✓</span>
-                      )}
-                    </button>
-                  );
-                })}
+      {/* Quarter groups */}
+      <div className="px-5 space-y-8">
+        {QUARTERS.map(q => {
+          const qMems = byQuarter[q];
+          if (!qMems) return null;
+          const isCurrent = q === currentQ;
+          return (
+            <div
+              key={q}
+              ref={el => { quarterRefs.current[q] = el; }}
+            >
+              <div className="flex items-center gap-2 mb-4">
+                <p className="label-text">{q}</p>
+                {isCurrent && (
+                  <span className="text-[9px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full bg-primary/15 text-primary">
+                    Now
+                  </span>
+                )}
+              </div>
+              <div className="flex flex-wrap gap-3 justify-start">
+                {qMems.map(m => (
+                  <MemoryBubble
+                    key={m.id}
+                    id={m.id}
+                    title={m.title}
+                    emotions={m.emotions}
+                    isCompleted={m.isCompleted}
+                  />
+                ))}
               </div>
             </div>
-          ))}
-          {Object.keys(byQuarter).length === 0 && (
-            <p className="text-center text-muted-foreground text-sm py-12">No memories match this filter.</p>
-          )}
-        </div>
-      ) : (
-        /* Scatter/Bubble view */
-        <div className="px-5">
-          <div className="flex flex-wrap gap-4 justify-center py-8">
-            {filteredMemories.map((m, i) => {
-              const primary = EMOTIONS[m.emotions[0]];
-              const size = 60 + (m.title.length % 4) * 12;
-              return (
-                <button
-                  key={m.id}
-                  onClick={() => navigate(`/memory/${m.id}`)}
-                  className="relative rounded-full flex items-center justify-center active:scale-90 transition-transform"
-                  style={{
-                    width: size,
-                    height: size,
-                    background: primary.gradient,
-                    opacity: m.isCompleted ? 1 : 0.7,
-                  }}
-                  title={m.title}
-                >
-                  <span className="text-[9px] font-medium text-center px-2 leading-tight" style={{ color: '#0d0d0d' }}>
-                    {m.title.length > 20 ? m.title.slice(0, 18) + '…' : m.title}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-          {filteredMemories.length === 0 && (
-            <p className="text-center text-muted-foreground text-sm py-12">No memories match this filter.</p>
-          )}
-        </div>
-      )}
+          );
+        })}
 
-      {/* Legend */}
-      <div className="px-5 mt-8 flex items-center justify-center gap-6">
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-muted-foreground" />
-          <span className="text-[11px] text-muted-foreground">Happened</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full border-2 border-muted-foreground" />
-          <span className="text-[11px] text-muted-foreground">Planned</span>
-        </div>
+        {Object.keys(byQuarter).length === 0 && (
+          <div className="flex flex-col items-center justify-center px-8 py-20 text-center">
+            <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center mb-4">
+              <Plus className="w-6 h-6 text-muted-foreground" />
+            </div>
+            <p className="text-muted-foreground text-sm">No memories yet. Start by adding your first one.</p>
+          </div>
+        )}
       </div>
+
+      {/* FAB */}
+      <button
+        onClick={() => navigate('/emotions')}
+        className="fixed bottom-24 right-5 w-14 h-14 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg active:scale-90 transition-transform z-20"
+      >
+        <Plus className="w-6 h-6" />
+      </button>
 
       <BottomNav />
     </div>
