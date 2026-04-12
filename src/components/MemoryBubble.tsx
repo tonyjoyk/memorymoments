@@ -29,20 +29,23 @@ export default function MemoryBubble({ id, title, emotions, isCompleted }: Memor
   const navigate = useNavigate();
   const primary = emotions[0];
   const colors = BUBBLE_COLORS[primary];
+  const emotionColor = EMOTIONS[primary].color;
 
   return (
     <button
       onClick={() => navigate(`/memory/${id}`)}
-      className="rounded-full flex items-center justify-center active:scale-90 transition-transform shrink-0"
+      className="rounded-full flex items-center justify-center active:scale-90 transition-all duration-200 shrink-0"
       style={{
         width: BUBBLE_SIZE,
         height: BUBBLE_SIZE,
         background: colors.gradient,
-        opacity: isCompleted ? 1 : 0.7,
+        opacity: isCompleted ? 1 : 0.55,
+        boxShadow: isCompleted ? `0 4px 20px ${emotionColor}20` : 'none',
+        border: isCompleted ? 'none' : `2px dashed ${emotionColor}66`,
       }}
     >
       <span
-        className="text-[12px] font-semibold leading-tight text-center px-3"
+        className="text-[12px] font-semibold leading-tight text-center px-2.5"
         style={{ color: '#000000' }}
       >
         {title.length > 24 ? title.slice(0, 22) + '…' : title}

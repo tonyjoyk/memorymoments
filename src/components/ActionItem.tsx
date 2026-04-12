@@ -10,20 +10,19 @@ export default function ActionItem({ text, completed, onToggle }: ActionItemProp
   return (
     <button
       onClick={onToggle}
-      className="flex items-center gap-3 w-full text-left py-2.5 group"
+      className="flex items-center gap-3 w-full text-left py-3 group active:opacity-70 transition-opacity"
     >
       <div
-        className={`w-5 h-5 rounded-md border flex items-center justify-center shrink-0 transition-colors ${
+        className={`w-[22px] h-[22px] rounded-md border-[1.5px] flex items-center justify-center shrink-0 transition-all duration-200 ${
           completed
             ? 'bg-primary border-primary'
-            : 'border-border-subtle bg-transparent'
+            : 'border-muted-foreground/30 bg-transparent'
         }`}
-        style={completed ? {} : { borderColor: 'hsl(var(--border-subtle))' }}
       >
-        {completed && <Check className="w-3.5 h-3.5 text-primary-foreground" />}
+        {completed && <Check className="w-3.5 h-3.5 text-primary-foreground" strokeWidth={3} />}
       </div>
       <span
-        className={`text-sm transition-colors ${
+        className={`text-sm leading-snug transition-colors ${
           completed ? 'text-muted-foreground line-through' : 'text-foreground'
         }`}
       >
