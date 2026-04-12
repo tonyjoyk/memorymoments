@@ -47,15 +47,29 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        sidebar: {
-          DEFAULT: "hsl(var(--sidebar-background))",
-          foreground: "hsl(var(--sidebar-foreground))",
-          primary: "hsl(var(--sidebar-primary))",
-          "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
-          accent: "hsl(var(--sidebar-accent))",
-          "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
-          border: "hsl(var(--sidebar-border))",
-          ring: "hsl(var(--sidebar-ring))",
+        surface: {
+          DEFAULT: "hsl(var(--surface))",
+          raised: "hsl(var(--surface-raised))",
+        },
+        joy: {
+          DEFAULT: "hsl(var(--joy))",
+          dim: "hsl(var(--joy-dim))",
+          bg: "hsl(var(--joy-bg))",
+        },
+        growth: {
+          DEFAULT: "hsl(var(--growth))",
+          dim: "hsl(var(--growth-dim))",
+          bg: "hsl(var(--growth-bg))",
+        },
+        courage: {
+          DEFAULT: "hsl(var(--courage))",
+          dim: "hsl(var(--courage-dim))",
+          bg: "hsl(var(--courage-bg))",
+        },
+        peace: {
+          DEFAULT: "hsl(var(--peace))",
+          dim: "hsl(var(--peace-dim))",
+          bg: "hsl(var(--peace-bg))",
         },
       },
       borderRadius: {
@@ -65,20 +79,12 @@ export default {
       },
       keyframes: {
         "accordion-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-accordion-content-height)",
-          },
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
-          },
-          to: {
-            height: "0",
-          },
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
         },
       },
       animation: {
