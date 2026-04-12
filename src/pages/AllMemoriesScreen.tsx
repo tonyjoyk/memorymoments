@@ -104,6 +104,16 @@ export default function AllMemoriesScreen() {
         </div>
       )}
 
+      {/* FAB */}
+      {memories.length > 0 && (
+        <button
+          onClick={() => navigate('/emotions')}
+          className="fixed bottom-24 right-5 w-14 h-14 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg active:scale-90 transition-transform z-20"
+        >
+          <Plus className="w-6 h-6" />
+        </button>
+      )}
+
       <BottomNav />
     </div>
   );
