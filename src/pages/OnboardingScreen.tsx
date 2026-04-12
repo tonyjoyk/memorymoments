@@ -50,18 +50,23 @@ export default function OnboardingScreen() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-between min-h-screen px-8 py-14 text-center">
+    <div className="flex flex-col items-center justify-between min-h-screen px-8 py-14 text-center safe-bottom">
       {/* Skip */}
       <div className="w-full flex justify-end">
-        {!isLast && (
-          <button onClick={handleSkip} className="text-muted-foreground text-xs font-medium">
+        {!isLast ? (
+          <button
+            onClick={handleSkip}
+            className="text-muted-foreground text-xs font-medium px-3 py-2 -mr-3 rounded-full active:bg-secondary transition-colors"
+          >
             Skip
           </button>
+        ) : (
+          <div className="h-8" />
         )}
       </div>
 
       {/* Visual */}
-      <div className="flex-1 flex flex-col items-center justify-center">
+      <div className="flex-1 flex flex-col items-center justify-center animate-fade-in" key={step}>
         {slide.orbs ? (
           <div className="relative w-48 h-48 mb-12">
             <div className="absolute top-0 left-4 animate-orb-float" style={{ animationDelay: '0s' }}>
@@ -86,7 +91,7 @@ export default function OnboardingScreen() {
         <h1 className="font-display text-[34px] leading-tight text-foreground mb-4 whitespace-pre-line">
           {slide.title}
         </h1>
-        <p className="text-muted-foreground text-sm max-w-[280px] leading-relaxed">
+        <p className="text-muted-foreground text-[15px] max-w-[280px] leading-relaxed">
           {slide.body}
         </p>
       </div>
@@ -94,13 +99,15 @@ export default function OnboardingScreen() {
       {/* Bottom */}
       <div className="w-full space-y-5">
         {/* Dots */}
-        <div className="flex justify-center gap-2">
+        <div className="flex justify-center gap-2.5">
           {SLIDES.map((_, i) => (
             <div
               key={i}
-              className="w-2 h-2 rounded-full transition-colors"
+              className="rounded-full transition-all duration-300"
               style={{
-                backgroundColor: i === step ? 'hsl(var(--foreground))' : 'hsl(var(--muted-foreground) / 0.3)',
+                width: i === step ? 24 : 8,
+                height: 8,
+                backgroundColor: i === step ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground) / 0.25)',
               }}
             />
           ))}
@@ -108,7 +115,7 @@ export default function OnboardingScreen() {
 
         <button
           onClick={handleNext}
-          className="w-full py-3.5 rounded-full font-medium text-sm bg-primary text-primary-foreground active:scale-[0.98] transition-transform"
+          className="w-full py-4 rounded-full font-semibold text-[15px] bg-primary text-primary-foreground active:scale-[0.98] transition-transform"
         >
           {isLast ? 'Get started' : 'Continue'}
         </button>

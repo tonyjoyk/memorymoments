@@ -39,9 +39,9 @@ export default function TimelineScreen() {
   const hasMemories = Object.keys(byQuarter).length > 0;
 
   return (
-    <div className="min-h-screen pb-24">
+    <div className="min-h-screen pb-28">
       {/* Header */}
-      <div className="px-5 pt-14 pb-4">
+      <div className="px-5 pt-14 pb-2">
         <h1 className="font-display text-[28px] text-foreground mb-1">Timeline</h1>
         {hasMemories && (
           <p className="text-sm text-muted-foreground">
@@ -51,17 +51,17 @@ export default function TimelineScreen() {
       </div>
 
       {hasMemories ? (
-        <div className="px-5 space-y-8">
+        <div className="px-5 pt-4 space-y-10">
           {QUARTERS.map(q => {
             const qMems = byQuarter[q];
             if (!qMems) return null;
             const isCurrent = q === currentQ;
             return (
-              <div key={q} ref={el => { quarterRefs.current[q] = el; }}>
-                <div className="flex items-center gap-2 mb-4">
+              <div key={q} ref={el => { quarterRefs.current[q] = el; }} className="animate-fade-in">
+                <div className="flex items-center gap-2.5 mb-4">
                   <p className="label-text">{q}</p>
                   {isCurrent && (
-                    <span className="text-[9px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full bg-primary/15 text-primary">
+                    <span className="text-[9px] uppercase tracking-wider font-bold px-2.5 py-0.5 rounded-full bg-primary/15 text-primary">
                       Now
                     </span>
                   )}
@@ -83,30 +83,31 @@ export default function TimelineScreen() {
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center px-8 py-20 text-center">
-          <div className="relative w-32 h-32 mb-8">
-            <div className="absolute inset-0 rounded-full opacity-20" style={{ background: 'radial-gradient(circle, #FCE354, transparent 70%)' }} />
+          <div className="relative w-36 h-36 mb-8">
+            <div className="absolute inset-0 rounded-full" style={{ background: 'radial-gradient(circle, hsl(var(--primary) / 0.15), transparent 70%)' }} />
             <div className="absolute inset-0 flex items-center justify-center">
-              <Plus className="w-10 h-10 text-muted-foreground" />
+              <Plus className="w-10 h-10 text-muted-foreground/60" />
             </div>
           </div>
-          <h2 className="font-display text-xl text-foreground mb-2">Your timeline is empty</h2>
+          <h2 className="font-display text-[22px] text-foreground mb-3">Your timeline is empty</h2>
           <p className="text-muted-foreground text-sm max-w-[260px] leading-relaxed mb-8">
             Start by adding a memory — something that happened, or something you're planning.
           </p>
           <button
             onClick={() => navigate('/emotions')}
-            className="bg-primary text-primary-foreground font-medium text-sm px-8 py-3.5 rounded-full active:scale-95 transition-transform"
+            className="bg-primary text-primary-foreground font-semibold text-[15px] px-8 py-4 rounded-full active:scale-95 transition-transform"
           >
             Add your first memory
           </button>
         </div>
       )}
 
-      {/* FAB — only show when there are memories */}
+      {/* FAB */}
       {hasMemories && (
         <button
           onClick={() => navigate('/emotions')}
-          className="fixed bottom-24 right-5 w-14 h-14 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg active:scale-90 transition-transform z-20"
+          className="fixed bottom-28 right-5 w-14 h-14 rounded-full bg-primary text-primary-foreground flex items-center justify-center active:scale-90 transition-transform z-20"
+          style={{ boxShadow: '0 4px 24px hsl(var(--primary) / 0.35)' }}
         >
           <Plus className="w-6 h-6" />
         </button>

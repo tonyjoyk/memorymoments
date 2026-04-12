@@ -9,7 +9,7 @@ export default function EmotionTag({ emotion, className = '' }: EmotionTagProps)
   const config = EMOTIONS[emotion];
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium ${className}`}
+      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-semibold ${className}`}
       style={{
         backgroundColor: config.bgColor,
         color: config.color,
@@ -17,7 +17,7 @@ export default function EmotionTag({ emotion, className = '' }: EmotionTagProps)
       }}
     >
       <span
-        className="w-2 h-2 rounded-full shrink-0"
+        className="w-[6px] h-[6px] rounded-full shrink-0"
         style={{ backgroundColor: config.color }}
       />
       {config.label}

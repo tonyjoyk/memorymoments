@@ -21,7 +21,7 @@ export default function MemoryDetailScreen() {
         <p className="text-muted-foreground text-sm mb-4">This memory doesn't exist.</p>
         <button
           onClick={() => navigate('/timeline')}
-          className="text-primary text-sm font-medium"
+          className="text-primary text-sm font-semibold"
         >
           Back to timeline
         </button>
@@ -48,16 +48,18 @@ export default function MemoryDetailScreen() {
       >
         <NavBar
           backTo="/timeline"
+          transparent
           rightAction={
             <button
               onClick={() => setShowDeleteConfirm(true)}
-              className="w-10 h-10 flex items-center justify-center rounded-full active:bg-secondary transition-colors -mr-2"
+              className="w-10 h-10 flex items-center justify-center rounded-full active:bg-white/10 transition-colors -mr-2"
+              aria-label="Delete memory"
             >
-              <Trash2 className="w-4.5 h-4.5 text-muted-foreground" />
+              <Trash2 className="w-[18px] h-[18px] text-muted-foreground" />
             </button>
           }
         />
-        <div className="px-5 pb-8 pt-2">
+        <div className="px-5 pb-8 pt-1">
           <div className="flex flex-wrap gap-1.5 mb-4">
             {memory.emotions.map(e => (
               <EmotionTag key={e} emotion={e} />
@@ -90,15 +92,21 @@ export default function MemoryDetailScreen() {
 
         {memory.actions.length > 0 && (
           <div>
-            <p className="label-text mb-2">Action steps</p>
-            <div className="rounded-lg p-3" style={{ backgroundColor: 'hsl(var(--surface))' }}>
-              {memory.actions.map(action => (
-                <ActionItem
-                  key={action.id}
-                  text={action.text}
-                  completed={action.completed}
-                  onToggle={() => toggleAction(memory.id, action.id)}
-                />
+            <p className="label-text mb-2">
+              Action steps · {memory.actions.filter(a => a.completed).length}/{memory.actions.length}
+            </p>
+            <div className="rounded-xl p-4" style={{ backgroundColor: 'hsl(var(--surface))' }}>
+              {memory.actions.map((action, i) => (
+                <div key={action.id}>
+                  <ActionItem
+                    text={action.text}
+                    completed={action.completed}
+                    onToggle={() => toggleAction(memory.id, action.id)}
+                  />
+                  {i < memory.actions.length - 1 && (
+                    <div className="border-b border-border/50 ml-[34px]" />
+                  )}
+                </div>
               ))}
             </div>
           </div>
@@ -106,7 +114,7 @@ export default function MemoryDetailScreen() {
 
         {memory.isCompleted && memory.reflection && (
           <div
-            className="rounded-lg p-4 border"
+            className="rounded-xl p-5 border"
             style={{
               backgroundColor: primaryEmotion.bgColor,
               borderColor: `${primaryEmotion.dimColor}44`,
@@ -119,17 +127,17 @@ export default function MemoryDetailScreen() {
       </div>
 
       {/* CTAs */}
-      <div className="sticky bottom-0 p-5 bg-background/90 backdrop-blur-lg border-t border-border flex gap-3">
+      <div className="sticky bottom-0 p-5 bg-background/95 backdrop-blur-xl border-t border-border flex gap-3 safe-bottom">
         <button
           onClick={() => navigate(-1)}
-          className="flex-1 py-3.5 rounded-full font-medium text-sm border border-border text-foreground active:scale-[0.98] transition-transform"
+          className="flex-1 py-3.5 rounded-full font-semibold text-sm border border-border text-foreground active:scale-[0.98] transition-transform"
         >
           Back
         </button>
         {!memory.isCompleted && (
           <button
             onClick={() => navigate(`/reflect/${memory.id}`)}
-            className="flex-1 py-3.5 rounded-full font-medium text-sm active:scale-[0.98] transition-transform"
+            className="flex-1 py-3.5 rounded-full font-semibold text-sm active:scale-[0.98] transition-transform"
             style={{
               backgroundColor: primaryEmotion.color,
               color: '#000000',
@@ -142,24 +150,31 @@ export default function MemoryDetailScreen() {
 
       {/* Delete confirmation overlay */}
       {showDeleteConfirm && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 backdrop-blur-sm" onClick={() => setShowDeleteConfirm(false)}>
+        <div
+          className="fixed inset-0 z-50 flex items-end justify-center animate-fade-overlay"
+          style={{ backgroundColor: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)' }}
+          onClick={() => setShowDeleteConfirm(false)}
+        >
           <div
-            className="w-full max-w-lg rounded-t-2xl p-6 space-y-4"
+            className="w-full max-w-lg rounded-t-2xl p-6 space-y-4 animate-slide-up"
             style={{ backgroundColor: 'hsl(var(--card))' }}
             onClick={e => e.stopPropagation()}
           >
+            {/* Handle bar */}
+            <div className="w-10 h-1 rounded-full bg-muted-foreground/30 mx-auto -mt-1 mb-2" />
             <h3 className="font-display text-lg text-foreground">Delete this memory?</h3>
-            <p className="text-sm text-muted-foreground">This can't be undone. The memory and its reflection will be permanently removed.</p>
+            <p className="text-sm text-muted-foreground leading-relaxed">This can't be undone. The memory and its reflection will be permanently removed.</p>
             <div className="flex gap-3 pt-2">
               <button
                 onClick={() => setShowDeleteConfirm(false)}
-                className="flex-1 py-3 rounded-full font-medium text-sm border border-border text-foreground active:scale-[0.98] transition-transform"
+                className="flex-1 py-3.5 rounded-full font-semibold text-sm border border-border text-foreground active:scale-[0.98] transition-transform"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDelete}
-                className="flex-1 py-3 rounded-full font-medium text-sm bg-red-500/90 text-foreground active:scale-[0.98] transition-transform"
+                className="flex-1 py-3.5 rounded-full font-semibold text-sm active:scale-[0.98] transition-transform"
+                style={{ backgroundColor: 'hsl(var(--destructive))', color: 'hsl(var(--destructive-foreground))' }}
               >
                 Delete
               </button>
