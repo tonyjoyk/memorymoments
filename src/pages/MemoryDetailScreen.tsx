@@ -13,8 +13,14 @@ export default function MemoryDetailScreen() {
   const memory = getMemory(id || '');
   if (!memory) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-muted-foreground">
-        Memory not found.
+      <div className="min-h-screen flex flex-col items-center justify-center px-8 text-center">
+        <p className="text-muted-foreground text-sm mb-4">This memory doesn't exist.</p>
+        <button
+          onClick={() => navigate('/timeline')}
+          className="text-primary text-sm font-medium"
+        >
+          Back to timeline
+        </button>
       </div>
     );
   }
@@ -95,10 +101,10 @@ export default function MemoryDetailScreen() {
       {/* CTAs */}
       <div className="sticky bottom-0 p-5 bg-background/90 backdrop-blur-lg border-t border-border flex gap-3">
         <button
-          onClick={() => navigate('/timeline')}
+          onClick={() => navigate(-1)}
           className="flex-1 py-3.5 rounded-full font-medium text-sm border border-border text-foreground active:scale-[0.98] transition-transform"
         >
-          Back to timeline
+          Back
         </button>
         {!memory.isCompleted && (
           <button
@@ -106,7 +112,7 @@ export default function MemoryDetailScreen() {
             className="flex-1 py-3.5 rounded-full font-medium text-sm active:scale-[0.98] transition-transform"
             style={{
               backgroundColor: primaryEmotion.color,
-              color: '#0d0d0d',
+              color: '#000000',
             }}
           >
             This happened ✦
