@@ -93,6 +93,10 @@ export function MemoryProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
+  const deleteMemory = (id: string) => {
+    dispatch({ type: 'DELETE_MEMORY', payload: id });
+  };
+
   const toggleAction = (memoryId: string, actionId: string) => {
     dispatch({ type: 'TOGGLE_ACTION', payload: { memoryId, actionId } });
   };
@@ -104,7 +108,7 @@ export function MemoryProvider({ children }: { children: React.ReactNode }) {
   const getMemory = (id: string) => state.memories.find(m => m.id === id);
 
   return (
-    <MemoryContext.Provider value={{ memories: state.memories, addMemory, toggleAction, completeMemory, getMemory }}>
+    <MemoryContext.Provider value={{ memories: state.memories, addMemory, deleteMemory, toggleAction, completeMemory, getMemory }}>
       {children}
     </MemoryContext.Provider>
   );
