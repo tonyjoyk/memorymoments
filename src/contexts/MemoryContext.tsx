@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
-import { Memory, EmotionType, ActionStep, SAMPLE_MEMORIES } from '@/lib/constants';
+import { Memory, EmotionType, ActionStep } from '@/lib/constants';
 
 type Action =
   | { type: 'ADD_MEMORY'; payload: Memory }
@@ -61,7 +61,7 @@ function loadMemories(): Memory[] {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) return JSON.parse(saved);
   } catch {}
-  return SAMPLE_MEMORIES;
+  return [];
 }
 
 interface MemoryContextType {

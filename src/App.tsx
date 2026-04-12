@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { MemoryProvider } from "@/contexts/MemoryContext";
 import SplashScreen from "./pages/SplashScreen";
+import OnboardingScreen from "./pages/OnboardingScreen";
 import EmotionPickerScreen from "./pages/EmotionPickerScreen";
 import AddMemoryScreen from "./pages/AddMemoryScreen";
 import MemoryDetailScreen from "./pages/MemoryDetailScreen";
@@ -23,6 +24,7 @@ const App = () => (
           <div className="max-w-lg mx-auto min-h-screen relative">
             <Routes>
               <Route path="/" element={<SplashScreen />} />
+              <Route path="/onboarding" element={<OnboardingScreen />} />
               <Route path="/timeline" element={<TimelineScreen />} />
               <Route path="/all" element={<AllMemoriesScreen />} />
               <Route path="/emotions" element={<EmotionPickerScreen />} />

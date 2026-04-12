@@ -8,21 +8,17 @@ interface MemoryBubbleProps {
   isCompleted: boolean;
 }
 
-const BUBBLE_COLORS: Record<EmotionType, { base: string; gradient: string }> = {
+const BUBBLE_COLORS: Record<EmotionType, { gradient: string }> = {
   courage: {
-    base: '#FF7D56',
     gradient: 'radial-gradient(circle at 35% 35%, #FFB89A, #FF7D56 60%, #E86A3A)',
   },
   joy: {
-    base: '#FCE354',
     gradient: 'radial-gradient(circle at 35% 35%, #FFF1A0, #FCE354 60%, #E0C830)',
   },
   growth: {
-    base: '#5FD8FF',
     gradient: 'radial-gradient(circle at 35% 35%, #B0EDFF, #5FD8FF 60%, #3ABDE0)',
   },
   peace: {
-    base: '#6AFFA5',
     gradient: 'radial-gradient(circle at 35% 35%, #B8FFD4, #6AFFA5 60%, #45E085)',
   },
 };
@@ -46,7 +42,7 @@ export default function MemoryBubble({ id, title, emotions, isCompleted }: Memor
       }}
     >
       <span
-        className="text-[13px] font-medium leading-tight text-center px-3"
+        className="text-[12px] font-semibold leading-tight text-center px-3"
         style={{ color: '#000000' }}
       >
         {title.length > 24 ? title.slice(0, 22) + '…' : title}

@@ -4,6 +4,7 @@ import { useMemories } from '@/contexts/MemoryContext';
 import { EMOTIONS, EmotionType, EMOTION_LIST } from '@/lib/constants';
 import NavBar from '@/components/NavBar';
 import EmotionOrb from '@/components/EmotionOrb';
+import { toast } from 'sonner';
 
 export default function ReflectionScreen() {
   const { id } = useParams<{ id: string }>();
@@ -16,8 +17,14 @@ export default function ReflectionScreen() {
 
   if (!memory) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-muted-foreground">
-        Memory not found.
+      <div className="min-h-screen flex flex-col items-center justify-center px-8 text-center">
+        <p className="text-muted-foreground text-sm mb-4">This memory doesn't exist.</p>
+        <button
+          onClick={() => navigate('/timeline')}
+          className="text-primary text-sm font-medium"
+        >
+          Back to timeline
+        </button>
       </div>
     );
   }
@@ -31,6 +38,7 @@ export default function ReflectionScreen() {
   const handleSave = () => {
     if (selectedEmotions.length === 0) return;
     completeMemory(memory.id, reflection.trim() || undefined, selectedEmotions);
+    toast.success('Memory marked as happened');
     navigate('/timeline');
   };
 
@@ -53,7 +61,6 @@ export default function ReflectionScreen() {
       </div>
 
       <div className="flex-1 px-5 py-6 space-y-8">
-        {/* Re-select emotions */}
         <div>
           <p className="label-text mb-3">How did it actually feel?</p>
           <div className="grid grid-cols-4 gap-3">
@@ -77,7 +84,6 @@ export default function ReflectionScreen() {
           </div>
         </div>
 
-        {/* Reflection */}
         <div>
           <p className="label-text mb-2">A small reflection</p>
           <textarea
@@ -85,6 +91,7 @@ export default function ReflectionScreen() {
             onChange={e => setReflection(e.target.value)}
             placeholder="How do you feel now that it's happened?"
             rows={3}
+            maxLength={500}
             className="w-full rounded-lg px-4 py-3 text-sm text-foreground border border-border placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring resize-none"
             style={{ backgroundColor: 'hsl(var(--surface))' }}
           />
@@ -98,7 +105,7 @@ export default function ReflectionScreen() {
           className="w-full py-3.5 rounded-full font-medium text-sm active:scale-[0.98] transition-transform disabled:opacity-30"
           style={{
             backgroundColor: primaryEmotion.color,
-            color: '#0d0d0d',
+            color: '#000000',
           }}
         >
           Save reflection
