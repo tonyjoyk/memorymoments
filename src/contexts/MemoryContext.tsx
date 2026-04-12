@@ -67,6 +67,7 @@ function loadMemories(): Memory[] {
 interface MemoryContextType {
   memories: Memory[];
   addMemory: (memory: Omit<Memory, 'id' | 'createdAt'>) => void;
+  deleteMemory: (id: string) => void;
   toggleAction: (memoryId: string, actionId: string) => void;
   completeMemory: (id: string, reflection?: string, emotions?: EmotionType[]) => void;
   getMemory: (id: string) => Memory | undefined;
