@@ -1,14 +1,18 @@
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useMemories } from '@/contexts/MemoryContext';
 import { EMOTIONS } from '@/lib/constants';
 import NavBar from '@/components/NavBar';
 import EmotionTag from '@/components/EmotionTag';
 import ActionItem from '@/components/ActionItem';
+import { Trash2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function MemoryDetailScreen() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { getMemory, toggleAction } = useMemories();
+  const { getMemory, toggleAction, deleteMemory } = useMemories();
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const memory = getMemory(id || '');
   if (!memory) {
@@ -27,6 +31,12 @@ export default function MemoryDetailScreen() {
 
   const primaryEmotion = EMOTIONS[memory.emotions[0]];
 
+  const handleDelete = () => {
+    deleteMemory(memory.id);
+    toast.success('Memory deleted');
+    navigate('/timeline', { replace: true });
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Hero with emotion tint */}
@@ -36,7 +46,17 @@ export default function MemoryDetailScreen() {
           background: `linear-gradient(180deg, ${primaryEmotion.bgColor} 0%, hsl(0 0% 5.1%) 100%)`,
         }}
       >
-        <NavBar backTo="/timeline" />
+        <NavBar
+          backTo="/timeline"
+          rightAction={
+            <button
+              onClick={() => setShowDeleteConfirm(true)}
+              className="w-10 h-10 flex items-center justify-center rounded-full active:bg-secondary transition-colors -mr-2"
+            >
+              <Trash2 className="w-4.5 h-4.5 text-muted-foreground" />
+            </button>
+          }
+        />
         <div className="px-5 pb-8 pt-2">
           <div className="flex flex-wrap gap-1.5 mb-4">
             {memory.emotions.map(e => (
@@ -119,6 +139,34 @@ export default function MemoryDetailScreen() {
           </button>
         )}
       </div>
+
+      {/* Delete confirmation overlay */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 backdrop-blur-sm" onClick={() => setShowDeleteConfirm(false)}>
+          <div
+            className="w-full max-w-lg rounded-t-2xl p-6 space-y-4"
+            style={{ backgroundColor: 'hsl(var(--card))' }}
+            onClick={e => e.stopPropagation()}
+          >
+            <h3 className="font-display text-lg text-foreground">Delete this memory?</h3>
+            <p className="text-sm text-muted-foreground">This can't be undone. The memory and its reflection will be permanently removed.</p>
+            <div className="flex gap-3 pt-2">
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                className="flex-1 py-3 rounded-full font-medium text-sm border border-border text-foreground active:scale-[0.98] transition-transform"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                className="flex-1 py-3 rounded-full font-medium text-sm bg-red-500/90 text-foreground active:scale-[0.98] transition-transform"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
