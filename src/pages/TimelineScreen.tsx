@@ -1,28 +1,22 @@
 import { useEffect, useRef } from 'react';
 import { useMemories } from '@/contexts/MemoryContext';
-import { QUARTERS } from '@/lib/constants';
+import { currentQuarter, getQuarters, quarterSortKey } from '@/lib/constants';
 import BottomNav from '@/components/BottomNav';
 import MemoryBubble from '@/components/MemoryBubble';
 import { Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-function getCurrentQuarter(): string {
-  const now = new Date();
-  const month = now.getMonth();
-  const year = now.getFullYear();
-  if (month < 3) return `Jan – Mar ${year}`;
-  if (month < 6) return `Apr – Jun ${year}`;
-  if (month < 9) return `Jul – Sep ${year}`;
-  return `Oct – Dec ${year}`;
-}
-
 export default function TimelineScreen() {
   const { memories } = useMemories();
   const navigate = useNavigate();
-  const currentQ = getCurrentQuarter();
+  const currentQ = currentQuarter();
   const quarterRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
-  const byQuarter = QUARTERS.reduce<Record<string, typeof memories>>((acc, q) => {
+  // Generated range plus any quarter already used by a saved memory, so older entries never drop off.
+  const quarters = Array.from(new Set([...getQuarters(), ...memories.map(m => m.quarter)]))
+    .sort((a, b) => quarterSortKey(a) - quarterSortKey(b));
+
+  const byQuarter = quarters.reduce<Record<string, typeof memories>>((acc, q) => {
     const qMems = memories.filter(m => m.quarter === q);
     if (qMems.length > 0) acc[q] = qMems;
     return acc;
@@ -52,7 +46,7 @@ export default function TimelineScreen() {
 
       {hasMemories ? (
         <div className="px-5 pt-4 space-y-10">
-          {QUARTERS.map(q => {
+          {quarters.map(q => {
             const qMems = byQuarter[q];
             if (!qMems) return null;
             const isCurrent = q === currentQ;

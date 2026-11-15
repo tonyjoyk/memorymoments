@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { EmotionType, QUARTERS } from '@/lib/constants';
+import { useNavigate, useLocation, Navigate } from 'react-router-dom';
+import { EmotionType, getQuarters, currentQuarter } from '@/lib/constants';
 import { useMemories } from '@/contexts/MemoryContext';
 import NavBar from '@/components/NavBar';
 import EmotionTag from '@/components/EmotionTag';
@@ -15,7 +15,8 @@ export default function AddMemoryScreen() {
   const emotions = (location.state?.emotions as EmotionType[]) || [];
 
   const [title, setTitle] = useState('');
-  const [quarter, setQuarter] = useState(QUARTERS[4]);
+  const [quarter, setQuarter] = useState(currentQuarter);
+  const [quarterOptions] = useState(() => getQuarters());
   const [whyMatters, setWhyMatters] = useState('');
   const [whatYoudMiss, setWhatYoudMiss] = useState('');
   const [actions, setActions] = useState<{ id: string; text: string }[]>([]);
@@ -24,8 +25,7 @@ export default function AddMemoryScreen() {
 
   // Redirect if no emotions selected
   if (emotions.length === 0) {
-    navigate('/emotions', { replace: true });
-    return null;
+    return <Navigate to="/emotions" replace />;
   }
 
   const addAction = () => {
@@ -78,7 +78,7 @@ export default function AddMemoryScreen() {
               className="w-full rounded-xl px-4 py-3.5 text-sm text-foreground border border-border focus:outline-none focus:ring-1 focus:ring-ring appearance-none pr-10"
               style={{ backgroundColor: 'hsl(var(--surface))' }}
             >
-              {QUARTERS.map(q => (
+              {quarterOptions.map(q => (
                 <option key={q} value={q}>{q}</option>
               ))}
             </select>

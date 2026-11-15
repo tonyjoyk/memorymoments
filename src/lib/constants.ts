@@ -70,15 +70,34 @@ export interface Memory {
   createdAt: string;
 }
 
-export const QUARTERS = [
-  'Jan – Mar 2025',
-  'Apr – Jun 2025',
-  'Jul – Sep 2025',
-  'Oct – Dec 2025',
-  'Jan – Mar 2026',
-  'Apr – Jun 2026',
-  'Jul – Sep 2026',
-  'Oct – Dec 2026',
-];
+const QUARTER_MONTHS = ['Jan – Mar', 'Apr – Jun', 'Jul – Sep', 'Oct – Dec'];
+
+/** Label for the quarter containing `date`, e.g. "Oct – Dec 2026". */
+export function quarterLabel(date: Date = new Date()): string {
+  return `${QUARTER_MONTHS[Math.floor(date.getMonth() / 3)]} ${date.getFullYear()}`;
+}
+
+export function currentQuarter(): string {
+  return quarterLabel(new Date());
+}
+
+/** Sort key for a quarter label (year * 4 + quarter index). Unknown labels sort last. */
+export function quarterSortKey(label: string): number {
+  const match = label.match(/^(.+) (\d{4})$/);
+  if (!match) return Number.MAX_SAFE_INTEGER;
+  const idx = QUARTER_MONTHS.indexOf(match[1]);
+  if (idx === -1) return Number.MAX_SAFE_INTEGER;
+  return Number(match[2]) * 4 + idx;
+}
+
+/** Quarters from `back` quarters ago to `ahead` quarters from now, oldest first. */
+export function getQuarters(back = 4, ahead = 7, now: Date = new Date()): string[] {
+  const base = now.getFullYear() * 4 + Math.floor(now.getMonth() / 3);
+  const out: string[] = [];
+  for (let k = base - back; k <= base + ahead; k++) {
+    out.push(`${QUARTER_MONTHS[k % 4]} ${Math.floor(k / 4)}`);
+  }
+  return out;
+}
 
 export const ONBOARDING_KEY = 'memory-moments-onboarded';
